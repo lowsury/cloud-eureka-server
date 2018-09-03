@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 文件输出格式 -->
+    <property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n"/>
+    <!-- test文件路径 -->
+    <property name="FILE_PATH" value="/opt/logs/igjia/cloud"/>
+
+    <!-- 开发环境 -->
+    <springProfile name="dev">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+        <logger name="org.springframework" level="debug"/>
+        <logger name="org.mybatis" level="debug"/>
+        <logger name="com.opensymphony" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+        <root level="debug">
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
+
+    <!-- 测试环境 -->
+    <springProfile name="test">
+        <!-- 每天产生一个文件 -->
+        <!-- 所有日志文件 -->
+        <appender name="filelog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${FILE_PATH}/log.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${FILE_PATH}/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+                <!--如果maxHistory设置为30，那么超过30天的log文件会被自动删除。-->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+        <logger name="org.springframework" level="debug"/>
+        <logger name="org.mybatis" level="debug"/>
+        <logger name="com.opensymphony" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+        <logger name="com.yunye.cloud" level="debug"/>
+        <root level="info">
+            <appender-ref ref="filelog"/>
+        </root>
+    </springProfile>
+    <!-- 试运行环境 -->
+    <springProfile name="prod">
+        <!-- 每天产生一个文件 -->
+        <!-- 所有日志文件 -->
+        <appender name="filelog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${FILE_PATH}/log.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${FILE_PATH}/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+                <!--如果maxHistory设置为30，那么超过30天的log文件会被自动删除。-->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+        <logger name="org.springframework" level="debug"/>
+        <logger name="org.mybatis" level="debug"/>
+        <logger name="com.opensymphony" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+        <logger name="com.yunye.cloud" level="debug"/>
+        <root level="info">
+            <appender-ref ref="filelog"/>
+        </root>
+    </springProfile>
+
+</configuration>
